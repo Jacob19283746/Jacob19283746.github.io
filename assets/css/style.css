@@ -334,6 +334,11 @@ main {
 .avatar-box {
   background: var(--bg-gradient-onyx);
   border-radius: 20px;
+  width: 100px; /* Явно задайте размеры */
+  height: 100px;
+  border-radius: 50%; /* Делаем сам контейнер круглым */
+  overflow: hidden; /* ОБЯЗАТЕЛЬНО! Обрезает всё, что выходит за круг */
+  display: flex; /* Или inline-flex/block */
 }
 
 .info-content .name {
