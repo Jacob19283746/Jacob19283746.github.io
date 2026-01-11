@@ -120,55 +120,58 @@ const form = document.querySelector("[data-form]");
 const formInputs = document.querySelectorAll("[data-form-input]");
 const formBtn = document.querySelector("[data-form-btn]");
 
-// add event to all form input field
-for (let i = 0; i < formInputs.length; i++) {
-  formInputs[i].addEventListener("input", function () {
+// check if form exists before adding event listeners
+if (form && formInputs.length > 0 && formBtn) {
+  // add event to all form input field
+  for (let i = 0; i < formInputs.length; i++) {
+    formInputs[i].addEventListener("input", function () {
 
-    // check form validation
-    if (form.checkValidity()) {
+      // check form validation
+      if (form.checkValidity()) {
+        formBtn.removeAttribute("disabled");
+      } else {
+        formBtn.setAttribute("disabled", "");
+      }
+
+    });
+  }
+
+  // handle form submission
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    // get form data
+    const formData = new FormData(form);
+    
+    // disable button and show sending status
+    formBtn.setAttribute("disabled", "");
+    formBtn.querySelector("span").textContent = "Sending...";
+
+    // send form data
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("Message sent successfully! Thank you for contacting me.");
+        form.reset();
+        formBtn.querySelector("span").textContent = "Send Message";
+      } else {
+        throw new Error('Form submission failed');
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Error sending message. Please try again or contact me directly via email.");
       formBtn.removeAttribute("disabled");
-    } else {
-      formBtn.setAttribute("disabled", "");
-    }
-
+      formBtn.querySelector("span").textContent = "Send Message";
+    });
   });
 }
-
-// handle form submission
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  // get form data
-  const formData = new FormData(form);
-  
-  // disable button and show sending status
-  formBtn.setAttribute("disabled", "");
-  formBtn.querySelector("span").textContent = "Sending...";
-
-  // send form data
-  fetch(form.action, {
-    method: "POST",
-    body: formData,
-    headers: {
-      'Accept': 'application/json'
-    }
-  })
-  .then(response => {
-    if (response.ok) {
-      alert("Message sent successfully! Thank you for contacting me.");
-      form.reset();
-      formBtn.querySelector("span").textContent = "Send Message";
-    } else {
-      throw new Error('Form submission failed');
-    }
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    alert("Error sending message. Please try again or contact me directly via email.");
-    formBtn.removeAttribute("disabled");
-    formBtn.querySelector("span").textContent = "Send Message";
-  });
-});
 
 
 
