@@ -334,11 +334,9 @@ main {
 .avatar-box {
   background: var(--bg-gradient-onyx);
   border-radius: 20px;
-  width: 100px; /* Явно задайте размеры */
-  height: 100px;
-  border-radius: 50%; /* Делаем сам контейнер круглым */
-  overflow: hidden; /* ОБЯЗАТЕЛЬНО! Обрезает всё, что выходит за круг */
-  display: flex; /* Или inline-flex/block */
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
 }
 
 .info-content .name {
@@ -451,6 +449,24 @@ main {
 
 .social-item .social-link:hover { color: var(--light-gray); }
 
+/* Простой фикс для фотографии */
+@media screen and (max-width: 768px) {
+  .avatar-box {
+    flex-shrink: 0;
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .sidebar.active {
+    max-height: 400px !important;
+    overflow-y: auto;
+  }
+
+  /* Убираем горизонтальный скролл */
+  .sidebar {
+    overflow-x: hidden;
+  }
+}
 
 
 
