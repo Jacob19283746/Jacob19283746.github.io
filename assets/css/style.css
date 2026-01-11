@@ -430,6 +430,11 @@ main {
   font-size: var(--fs-7);
 }
 
+.contact-link {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .contact-info address { font-style: normal; }
 
 .social-list {
@@ -1875,9 +1880,9 @@ textarea.form-input::-webkit-resizer { display: none; }
   .contacts-list { grid-template-columns: 1fr; }
 
   .contact-info :is(.contact-link) {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .contact-info :is(.contact-link, time, address) {
