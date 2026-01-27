@@ -196,3 +196,110 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
   });
 }
+
+
+
+// project modal variables
+const projectItems = document.querySelectorAll("[data-project-item]");
+const projectModalContainer = document.querySelector("[data-project-modal-container]");
+const projectOverlay = document.querySelector("[data-project-overlay]");
+const projectCloseBtn = document.querySelector("[data-project-close-btn]");
+const projectModalTitle = document.querySelector("[data-project-modal-title]");
+const projectModalCategory = document.querySelector("[data-project-modal-category]");
+const projectModalDescription = document.querySelector("[data-project-modal-description]");
+const projectModalTechnologies = document.querySelector("[data-project-modal-technologies]");
+const screenshotTabs = document.querySelector("[data-screenshot-tabs]");
+const screenshotContent = document.querySelector("[data-screenshot-content]");
+
+// project modal toggle function
+const projectModalFunc = function () {
+  projectModalContainer.classList.toggle("active");
+  projectOverlay.classList.toggle("active");
+  document.body.style.overflow = projectModalContainer.classList.contains("active") ? "hidden" : "";
+}
+
+// function to switch screenshot tab
+const switchScreenshotTab = function (index, screenshots) {
+  // Remove active class from all tabs
+  const tabs = screenshotTabs.querySelectorAll(".screenshot-tab");
+  tabs.forEach(tab => tab.classList.remove("active"));
+  
+  // Add active class to clicked tab
+  if (tabs[index]) {
+    tabs[index].classList.add("active");
+  }
+  
+  // Update screenshot content
+  if (screenshots[index]) {
+    screenshotContent.innerHTML = `
+      <img src="${screenshots[index].path}" alt="${screenshots[index].name}" class="screenshot-image">
+    `;
+  }
+}
+
+// add click event to all project items
+for (let i = 0; i < projectItems.length; i++) {
+  
+  projectItems[i].addEventListener("click", function (e) {
+    e.preventDefault();
+    
+    // Get project data from data attributes
+    const projectName = this.getAttribute("data-project-name");
+    const projectCategory = this.getAttribute("data-project-category");
+    const projectDescription = this.getAttribute("data-project-description");
+    const projectTechnologies = JSON.parse(this.getAttribute("data-project-technologies") || "[]");
+    const projectScreenshots = JSON.parse(this.getAttribute("data-project-screenshots") || "[]");
+    
+    // Set modal content
+    projectModalTitle.textContent = projectName;
+    projectModalCategory.textContent = projectCategory;
+    projectModalDescription.textContent = projectDescription;
+    
+    // Set technologies
+    projectModalTechnologies.innerHTML = "";
+    projectTechnologies.forEach(tech => {
+      const li = document.createElement("li");
+      li.className = "technology-item";
+      li.textContent = tech;
+      projectModalTechnologies.appendChild(li);
+    });
+    
+    // Set screenshots tabs
+    screenshotTabs.innerHTML = "";
+    screenshotContent.innerHTML = "";
+    
+    if (projectScreenshots.length > 0) {
+      projectScreenshots.forEach((screenshot, index) => {
+        // Create tab button
+        const tab = document.createElement("li");
+        tab.className = "screenshot-tab" + (index === 0 ? " active" : "");
+        tab.textContent = screenshot.name;
+        tab.addEventListener("click", function() {
+          switchScreenshotTab(index, projectScreenshots);
+        });
+        screenshotTabs.appendChild(tab);
+        
+        // Set first screenshot as default
+        if (index === 0) {
+          screenshotContent.innerHTML = `
+            <img src="${screenshot.path}" alt="${screenshot.name}" class="screenshot-image">
+          `;
+        }
+      });
+    }
+    
+    // Open modal
+    projectModalFunc();
+    
+  });
+  
+}
+
+// add click event to project modal close button
+if (projectCloseBtn) {
+  projectCloseBtn.addEventListener("click", projectModalFunc);
+}
+
+if (projectOverlay) {
+  projectOverlay.addEventListener("click", projectModalFunc);
+}
